@@ -39,4 +39,7 @@ public class SensorDataService {
     }
 
 
+    public Integer rainingDays(){
+        return sensorDataRepository.countByRainingIsTrue();
+    }
 }

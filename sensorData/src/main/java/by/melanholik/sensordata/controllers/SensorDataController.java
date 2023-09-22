@@ -1,8 +1,6 @@
 package by.melanholik.sensordata.controllers;
 
 import by.melanholik.sensordata.DTO.SensorDataDTO;
-import by.melanholik.sensordata.Exceptions.ExceptionResponse;
-import by.melanholik.sensordata.Exceptions.NotFoundSensorException;
 import by.melanholik.sensordata.Exceptions.SensorDataIsAlreadyExistException;
 import by.melanholik.sensordata.model.SensorData;
 import by.melanholik.sensordata.services.SensorDataService;
@@ -14,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +53,11 @@ public class SensorDataController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/rainyDaysCount")
+    public Integer getCountRainingDay() {
+        return sensorDataService.rainingDays();
+    }
+
     private SensorData convertToSensorData(SensorDataDTO sensorDataDTO) {
         return modelMapper.map(sensorDataDTO, SensorData.class);
     }
@@ -63,15 +65,4 @@ public class SensorDataController {
     private SensorDataDTO convertToSensorDataDTO(SensorData sensorData) {
         return modelMapper.map(sensorData, SensorDataDTO.class);
     }
-
-    @ExceptionHandler({SensorDataIsAlreadyExistException.class, NotFoundSensorException.class})
-    private ResponseEntity<ExceptionResponse> handleException(Exception e) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setHttpStatus(HttpStatus.BAD_REQUEST);
-        exceptionResponse.setTime(LocalDateTime.now());
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
-
-
 }

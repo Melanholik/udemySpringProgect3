@@ -2,7 +2,6 @@ package by.melanholik.sensordata.controllers;
 
 
 import by.melanholik.sensordata.DTO.SensorDTO;
-import by.melanholik.sensordata.Exceptions.ExceptionResponse;
 import by.melanholik.sensordata.Exceptions.SensorIsAlreadyExistException;
 import by.melanholik.sensordata.Exceptions.SensorIsNotCreatedException;
 import by.melanholik.sensordata.model.Sensor;
@@ -16,8 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/sensors")
@@ -34,8 +33,10 @@ public class SensorController {
 
 
     @GetMapping()
-    public List<Sensor> getAll() {
-        return sensorService.getAll();
+    public List<SensorDTO> getAll() {
+        return sensorService.getAll().stream()
+                .map(this::convertToSensorDTO)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/registration")
@@ -63,12 +64,9 @@ public class SensorController {
         return modelMapper.map(sensorDTO, Sensor.class);
     }
 
-    @ExceptionHandler({SensorIsNotCreatedException.class, SensorIsAlreadyExistException.class})
-    private ResponseEntity<ExceptionResponse> handleException(Exception e) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setHttpStatus(HttpStatus.BAD_REQUEST);
-        exceptionResponse.setTime(LocalDateTime.now());
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    private SensorDTO convertToSensorDTO(Sensor sensor) {
+        return modelMapper.map(sensor, SensorDTO.class);
     }
+
+
 }
