@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,11 +27,7 @@ public class SensorDataService {
 
     @Transactional
     public void add(SensorData sensorData) {
-        Optional<Sensor> sensor = sensorsRepositories.findByName(sensorData.getSensor().getName());
-        if (sensor.isEmpty()) {
-            throw new NotFoundSensorException("Not found sensor with that name");
-        }
-        sensorData.setSensor(sensor.get());
+        addParamToSensorData(sensorData);
         sensorDataRepository.save(sensorData);
     }
 
@@ -39,7 +36,16 @@ public class SensorDataService {
     }
 
 
-    public Integer rainingDays(){
+    public Integer rainingDays() {
         return sensorDataRepository.countByRainingIsTrue();
+    }
+
+    private void addParamToSensorData(SensorData sensorData) {
+        Optional<Sensor> sensor = sensorsRepositories.findByName(sensorData.getSensor().getName());
+        if (sensor.isEmpty()) {
+            throw new NotFoundSensorException("Not found sensor with that name");
+        }
+        sensorData.setCreatAt(LocalDateTime.now());
+        sensorData.setSensor(sensor.get());
     }
 }

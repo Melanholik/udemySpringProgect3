@@ -1,33 +1,22 @@
-package by.melanholik.sensordata.DTO;
-
-import by.melanholik.sensordata.model.Sensor;
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+package by.melanholik.weatherdata.models;
 
 import java.time.LocalDateTime;
 
-public class SensorDataDTO {
+public class SensorData {
 
-    @NotNull(message = "The value must not be null")
-    @Min(value = -100, message = "The value must be great than -100")
-    @Max(value = 100, message = "The value must be less than 100")
     private Float value;
 
-    @NotNull(message = "The value of raining must not be null")
     private Boolean raining;
 
-    @NotNull(message = "The sensor must not be null")
     private Sensor sensor;
 
-    @NotNull
     private LocalDateTime dateWeather;
 
-    public SensorDataDTO() {
+    public SensorData() {
+        sensor = new Sensor();
     }
 
-    public SensorDataDTO(Float value, Boolean raining, Sensor sensor, LocalDateTime dateWeather) {
+    public SensorData(Float value, Boolean raining, Sensor sensor, LocalDateTime dateWeather) {
         this.value = value;
         this.raining = raining;
         this.sensor = sensor;
@@ -64,5 +53,15 @@ public class SensorDataDTO {
 
     public void setDateWeather(LocalDateTime dateWeather) {
         this.dateWeather = dateWeather;
+    }
+
+    @Override
+    public String toString() {
+        return "SensorData{" +
+                "value=" + value +
+                ", raining=" + raining +
+                ", sensor=" + sensor +
+                ", dateWeather=" + dateWeather +
+                '}';
     }
 }

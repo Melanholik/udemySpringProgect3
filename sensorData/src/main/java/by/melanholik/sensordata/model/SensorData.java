@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "sensor_data")
 public class SensorData {
@@ -28,13 +30,23 @@ public class SensorData {
     @NotNull (message = "The sensor must not be null")
     private Sensor sensor;
 
+    @NotNull
+    @Column(name = "date_weather")
+    private LocalDateTime dateWeather;
+
+    @NotNull
+    @Column(name = "creat_at")
+    private LocalDateTime creatAt;
+
     public SensorData() {
     }
 
-    public SensorData(Float value, Boolean raining, Sensor sensor) {
+    public SensorData(Float value, Boolean raining, Sensor sensor, LocalDateTime dateWeather, LocalDateTime creatAt) {
         this.value = value;
         this.raining = raining;
         this.sensor = sensor;
+        this.dateWeather = dateWeather;
+        this.creatAt = creatAt;
     }
 
     public Integer getId() {
@@ -67,5 +79,21 @@ public class SensorData {
 
     public void setSensor(Sensor sensor) {
         this.sensor = sensor;
+    }
+
+    public LocalDateTime getDateWeather() {
+        return dateWeather;
+    }
+
+    public void setDateWeather(LocalDateTime dateWeather) {
+        this.dateWeather = dateWeather;
+    }
+
+    public LocalDateTime getCreatAt() {
+        return creatAt;
+    }
+
+    public void setCreatAt(LocalDateTime creatAt) {
+        this.creatAt = creatAt;
     }
 }
