@@ -21,8 +21,5 @@ CREATE TABLE IF NOT EXISTS sensor_data
     creat_at     TIMESTAMP NOT NULL
 );
 
-INSERT INTO sensor_data(date_weather, value, raining, sensor_id, creat_at)
-VALUES ('2023-09-23 22:00', 20.3, true, 1, now());
-
 SELECT *
 FROM sensor_data;
