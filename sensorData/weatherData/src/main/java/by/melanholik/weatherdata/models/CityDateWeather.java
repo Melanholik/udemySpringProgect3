@@ -14,53 +14,34 @@ import java.util.List;
 
 public class CityDateWeather {
 
-    private String nameCity;
-    private LocalDate dateWeather;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
-    public CityDateWeather(String nameCity, LocalDate dateWeather) {
-        this.nameCity = nameCity;
-        this.dateWeather = dateWeather;
+    public CityDateWeather() {
+        restTemplate = new RestTemplate();
     }
 
-    public String getNameCity() {
-        return nameCity;
-    }
-
-    public void setNameCity(String nameCity) {
-        this.nameCity = nameCity;
-    }
-
-    public LocalDate getDateWeather() {
-        return dateWeather;
-    }
-
-    public void setDateWeather(LocalDate dateWeather) {
-        this.dateWeather = dateWeather;
-    }
-
-    public List<SensorData> getSensorsData() throws JsonProcessingException {
-        String jsonDataWeather = getResultByDay(dateWeather);
+    public List<SensorData> getSensorsDataToday(String nameCity) throws JsonProcessingException {
+        String jsonDataWeather = getResultByDay(nameCity, LocalDate.now());
         ObjectMapper mapper = new ObjectMapper();
         JsonNode arrData = mapper.readTree(jsonDataWeather).get("forecast").get("forecastday").get(0).get("hour");
-        return new ArrayList<>(parseToSensorData(arrData));
+        return new ArrayList<>(parseToSensorData(nameCity, arrData));
     }
 
-    public List<SensorData> getSensorsDataByLastWeak() throws JsonProcessingException {
+    public List<SensorData> getSensorsDataByLastWeak(String nameCity) throws JsonProcessingException {
         List<SensorData> sensorsData = new ArrayList<>();
         LocalDate localDate = LocalDate.now();
         for (int i = 0; i < 7; i++) {
-            String jsonDataWeather = getResultByDay(localDate);
+            String jsonDataWeather = getResultByDay(nameCity, localDate);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode arrData = mapper.readTree(jsonDataWeather).get("forecast").get("forecastday").get(0).get("hour");
-            sensorsData.addAll(parseToSensorData(arrData));
+            sensorsData.addAll(parseToSensorData(nameCity, arrData));
             localDate = localDate.minusDays(1);
         }
         return sensorsData;
     }
 
 
-    private String getResultByDay(LocalDate localDate) {
+    private String getResultByDay(String nameCity, LocalDate localDate) {
         try {
             String key = "40008e7e281843a18bd125123232209";
             String url = "http://api.weatherapi.com/v1/history.json?";
@@ -72,7 +53,7 @@ public class CityDateWeather {
         }
     }
 
-    private List<SensorData> parseToSensorData(JsonNode arrData) {
+    private List<SensorData> parseToSensorData(String nameCity, JsonNode arrData) {
         List<SensorData> sensorsData = new ArrayList<>();
         for (int i = 0; i < arrData.size(); i++) {
             SensorData sensorData = new SensorData();
@@ -86,6 +67,4 @@ public class CityDateWeather {
         }
         return sensorsData;
     }
-
-
 }
