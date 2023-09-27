@@ -1,5 +1,6 @@
 package by.melanholik.weatherdata.models;
 
+import by.melanholik.weatherdata.Exception.AddSensorException;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,7 +30,7 @@ public class WorkWithSensorData {
             HttpEntity<Sensor> request = new HttpEntity<>(sensor);
             restTemplate.postForObject(url, request, Object.class);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new AddSensorException(e.getMessage());
         }
 
     }
