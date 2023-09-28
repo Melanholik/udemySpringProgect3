@@ -1,7 +1,5 @@
 package by.melanholik.sensordata.DTO;
 
-import by.melanholik.sensordata.model.Sensor;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +17,7 @@ public class SensorDataDTO {
     private Boolean raining;
 
     @NotNull(message = "The sensor must not be null")
-    private Sensor sensor;
+    private SensorDTO sensor;
 
     @NotNull
     private LocalDateTime dateWeather;
@@ -27,7 +25,7 @@ public class SensorDataDTO {
     public SensorDataDTO() {
     }
 
-    public SensorDataDTO(Float value, Boolean raining, Sensor sensor, LocalDateTime dateWeather) {
+    public SensorDataDTO(Float value, Boolean raining, SensorDTO sensor, LocalDateTime dateWeather) {
         this.value = value;
         this.raining = raining;
         this.sensor = sensor;
@@ -50,11 +48,11 @@ public class SensorDataDTO {
         this.raining = raining;
     }
 
-    public Sensor getSensor() {
+    public SensorDTO getSensor() {
         return sensor;
     }
 
-    public void setSensor(Sensor sensor) {
+    public void setSensor(SensorDTO sensor) {
         this.sensor = sensor;
     }
 

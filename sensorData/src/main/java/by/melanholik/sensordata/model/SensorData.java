@@ -1,5 +1,6 @@
 package by.melanholik.sensordata.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -25,9 +26,10 @@ public class SensorData {
     @NotNull (message = "The value of raining must not be null")
     private Boolean raining;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "sensor_id" , referencedColumnName = "id")
     @NotNull (message = "The sensor must not be null")
+    @JsonBackReference
     private Sensor sensor;
 
     @NotNull

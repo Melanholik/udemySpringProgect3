@@ -1,7 +1,9 @@
 package by.melanholik.sensordata.controllers;
 
+import by.melanholik.sensordata.DTO.SensorDTO;
 import by.melanholik.sensordata.DTO.SensorDataDTO;
 import by.melanholik.sensordata.Exceptions.SensorDataIsAlreadyExistException;
+import by.melanholik.sensordata.model.Sensor;
 import by.melanholik.sensordata.model.SensorData;
 import by.melanholik.sensordata.services.SensorDataService;
 import jakarta.validation.Valid;
@@ -34,6 +36,13 @@ public class SensorDataController {
                 .collect(Collectors.toList());
     }
 
+    @PostMapping("/byName")
+    public List<SensorDataDTO> getByName(@RequestBody() SensorDTO sensor) {
+        return sensorDataService.getAllByNameSensor(sensor).stream()
+                .map(this::convertToSensorDataDTO)
+                .collect(Collectors.toList());
+    }
+
 
     @PostMapping("/add")
     public ResponseEntity<HttpStatus> add(@Valid @RequestBody SensorDataDTO sensorDataDTO,
@@ -59,10 +68,14 @@ public class SensorDataController {
     }
 
     private SensorData convertToSensorData(SensorDataDTO sensorDataDTO) {
-        return modelMapper.map(sensorDataDTO, SensorData.class);
+        SensorData sensorData = modelMapper.map(sensorDataDTO, SensorData.class);
+        sensorData.setSensor(new Sensor(sensorDataDTO.getSensor().getName()));
+        return sensorData;
     }
 
     private SensorDataDTO convertToSensorDataDTO(SensorData sensorData) {
-        return modelMapper.map(sensorData, SensorDataDTO.class);
+        SensorDataDTO sensorDataDTO = modelMapper.map(sensorData, SensorDataDTO.class);
+        sensorDataDTO.setSensor(new SensorDTO(sensorData.getSensor().getName()));
+        return sensorDataDTO;
     }
 }

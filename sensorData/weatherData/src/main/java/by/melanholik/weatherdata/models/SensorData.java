@@ -60,7 +60,7 @@ public class SensorData {
         return "SensorData{" +
                 "value=" + value +
                 ", raining=" + raining +
-                ", sensor=" + sensor +
+                ", sensor=" + sensor.getName() +
                 ", dateWeather=" + dateWeather +
                 '}';
     }

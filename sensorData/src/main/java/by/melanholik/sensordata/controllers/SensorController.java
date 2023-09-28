@@ -39,6 +39,11 @@ public class SensorController {
                 .collect(Collectors.toList());
     }
 
+    @PostMapping("/contains")
+    public boolean isSensorContains(@RequestBody Sensor sensor) {
+        return sensorService.isSensorExist(sensor);
+    }
+
     @PostMapping("/registration")
     public ResponseEntity<HttpStatus> add(@Valid @RequestBody SensorDTO sensorDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

@@ -1,6 +1,6 @@
 package by.melanholik.weatherdata.models;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import by.melanholik.weatherdata.Exception.GetDataException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,8 +38,8 @@ public class JavaViewForClient {
         switch (choice) {
             case (1) -> addNewSensor();
             case (2) -> addNewSensorData();
-            case (3) -> System.out.println("Вы выбрали третий пункт");
-            case (4) -> System.out.println("Вы выбрали четвертый пункт");
+            case (3) -> getSensorDataByCityName();
+            case (4) -> watchSchedule();
         }
     }
 
@@ -61,14 +61,50 @@ public class JavaViewForClient {
         }
     }
 
-    private void getSensorDataByCityName() throws JsonProcessingException {
+    private void getSensorDataByCityName() {
         messagePrinter.writeNameCity();
         String nameCity = getNextLineByScanner();
         messagePrinter.menuTime();
-        int choice = getIntByScanner();
-        List<SensorData> sensorData;
-        if (choice == 1) {
-            sensorData = cityDateWeather.getSensorsDataToday(nameCity);
+        try {
+            List<SensorData> sensorData = getSensorsData(nameCity);
+            System.out.println(sensorData);
+            messagePrinter.menuSave();
+            yesNoChoice(() -> workWithSensorData.addDatesSensor(sensorData), () -> {
+            });
+            messagePrinter.addDataSuccess();
+        } catch (Exception e) {
+            messagePrinter.mistakeGetData();
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void watchSchedule() {
+        messagePrinter.writeNameCity();
+        String nameCity = getNextLineByScanner();
+        List<SensorData> sensorData = workWithSensorData.getSensorsDataBySensorName(nameCity);
+        Schedule.whiteTemCByTime(sensorData);
+    }
+
+    private void yesNoChoice(Method firstMethod, Method secondMethod) {
+        int choice;
+        while (true) {
+            choice = getIntByScanner();
+            if (choice == 1) {
+                try {
+                    firstMethod.doMethod();
+                    break;
+                } catch (Exception e) {
+                    throw new GetDataException("Ошибка:\n" + e.getMessage());
+                }
+            } else if (choice == 2) {
+                try {
+                    secondMethod.doMethod();
+                    break;
+                } catch (Exception e) {
+                    throw new GetDataException("Ошибка:\n" + e.getMessage());
+                }
+            }
+            messagePrinter.badRange(1, 2);
         }
     }
 
@@ -92,15 +128,35 @@ public class JavaViewForClient {
 
     private void postSensorData(SensorData sensorData) {
         try {
-            workWithSensorData.postDateSensor(sensorData);
-            messagePrinter.addSensorDataSuccess();
+            workWithSensorData.addDateSensor(sensorData);
+            messagePrinter.addDataSuccess();
         } catch (Exception e) {
             messagePrinter.mistakeAddSensorData();
             System.out.println(e.getMessage());
-            messagePrinter.newSensorDate();
+            messagePrinter.newDate();
             if (getIntByScanner() == 1) {
                 addNewSensor();
             }
+        }
+    }
+
+    private List<SensorData> getSensorsData(String nameCity) {
+        int choice = getIntByScanner();
+        while (true) {
+            if (choice == 1) {
+                try {
+                    return cityDateWeather.getSensorsDataToday(nameCity);
+                } catch (Exception e) {
+                    throw new GetDataException("Ошибка при получении данных\n" + e.getMessage());
+                }
+            } else if (choice == 2) {
+                try {
+                    return cityDateWeather.getSensorsDataByLastWeak(nameCity);
+                } catch (Exception e) {
+                    throw new GetDataException("Ошибка при получении данных\n" + e.getMessage());
+                }
+            }
+            messagePrinter.badRange(1, 2);
         }
     }
 
@@ -166,8 +222,11 @@ public class JavaViewForClient {
     }
 
     private void badChoice() {
-        System.out.println("Число должно быть в диапазоне от 1 до 5");
+        messagePrinter.badRange(1, 5);
         messagePrinter.startMenu();
     }
 
+    private interface Method {
+        void doMethod();
+    }
 }

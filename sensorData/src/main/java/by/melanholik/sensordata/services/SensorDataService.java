@@ -1,15 +1,18 @@
 package by.melanholik.sensordata.services;
 
+import by.melanholik.sensordata.DTO.SensorDTO;
 import by.melanholik.sensordata.Exceptions.NotFoundSensorException;
 import by.melanholik.sensordata.model.Sensor;
 import by.melanholik.sensordata.model.SensorData;
 import by.melanholik.sensordata.repositories.SensorDataRepository;
 import by.melanholik.sensordata.repositories.SensorsRepositories;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +31,7 @@ public class SensorDataService {
     @Transactional
     public void add(SensorData sensorData) {
         addParamToSensorData(sensorData);
-        Optional<SensorData> currentSensorDate =  findByDateWeatherAndSensor(sensorData.getDateWeather(),
+        Optional<SensorData> currentSensorDate = findByDateWeatherAndSensor(sensorData.getDateWeather(),
                 sensorData.getSensor());
         currentSensorDate.ifPresent(data -> sensorData.setId(data.getId()));
         sensorDataRepository.save(sensorData);
@@ -38,12 +41,19 @@ public class SensorDataService {
         return sensorDataRepository.findAll();
     }
 
+    @Transactional
+    public List<SensorData> getAllByNameSensor(SensorDTO sensor) {
+        Optional<Sensor> currentSensor = sensorsRepositories.findByName(sensor.getName());
+        if (currentSensor.isPresent()) {
+            return currentSensor.get().getSensorData();
+        } else return Collections.emptyList();
+    }
 
     public Integer rainingDays() {
         return sensorDataRepository.countByRainingIsTrue();
     }
 
-    private Optional<SensorData> findByDateWeatherAndSensor(LocalDateTime dateWeather, Sensor sensor){
+    private Optional<SensorData> findByDateWeatherAndSensor(LocalDateTime dateWeather, Sensor sensor) {
         List<SensorData> sensorsData = sensorDataRepository.findByDateWeatherAndSensor(dateWeather, sensor);
         if (sensorsData.size() > 0) {
             return Optional.of(sensorsData.get(0));

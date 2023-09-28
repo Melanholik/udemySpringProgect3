@@ -1,10 +1,13 @@
 package by.melanholik.sensordata.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -21,6 +24,10 @@ public class Sensor {
     @NotNull(message = "Name must be not null")
     @Size(min = 3, max = 30, message = "Length sensor must be between 3 and 30 symbol")
     private String name;
+
+    @OneToMany(mappedBy = "sensor")
+    @JsonManagedReference
+    private List<SensorData> sensorData;
 
     public Sensor() {
     }
@@ -43,6 +50,14 @@ public class Sensor {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<SensorData> getSensorData() {
+        return sensorData;
+    }
+
+    public void setSensorData(List<SensorData> sensorData) {
+        this.sensorData = sensorData;
     }
 
     @Override

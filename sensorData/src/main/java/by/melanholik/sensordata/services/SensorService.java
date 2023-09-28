@@ -22,6 +22,10 @@ public class SensorService {
         return sensorsRepositories.findAll();
     }
 
+    public boolean isSensorExist(Sensor sensor){
+        return sensorsRepositories.existsByName(sensor.getName());
+    }
+
     @Transactional
     public boolean add(Sensor sensor){
          if (sensorsRepositories.existsByName(sensor.getName())) {

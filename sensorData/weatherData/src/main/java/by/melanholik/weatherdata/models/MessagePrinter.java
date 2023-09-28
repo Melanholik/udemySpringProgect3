@@ -17,7 +17,7 @@ public class MessagePrinter {
         System.out.print("2) Нет\n");
     }
 
-    public void newSensorDate(){
+    public void newDate(){
         System.out.println("Хотите ввести значения повторно");
         System.out.println("1) Да");
         System.out.println("2) Нет");
@@ -27,6 +27,12 @@ public class MessagePrinter {
         System.out.println("Хотите получить данные:");
         System.out.println("1) За сегодня ");
         System.out.println("2) За прошедшую неделю");
+    }
+
+    public void menuSave(){
+        System.out.println("Хотите сохранить данные:");
+        System.out.println("1) Да");
+        System.out.println("2) Нет");
     }
 
     public void isRaining(){
@@ -56,8 +62,20 @@ public class MessagePrinter {
     public void mistakeAddSensorData() {
         System.out.println("Произошла ошибка при добавлении данных сенсора");
     }
-    public void addSensorDataSuccess() {
+
+    public void mistakeGetData(){
+        System.out.println("Произошла ошибка при получении данных");
+    }
+
+    public void addDataSuccess() {
         System.out.println("Данные успешно добавились");
     }
 
+    public void badRange(int min, int max) {
+        System.out.println("Число должно быть в диапазоне от " + min + " до " + max);
+    }
+
+    public void tryAgain() {
+        System.out.println("Введите еще раз");
+    }
 }
