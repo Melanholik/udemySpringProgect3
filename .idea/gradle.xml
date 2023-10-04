@@ -18,6 +18,15 @@
       </GradleProjectSettings>
       <GradleProjectSettings>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/sensorData/localDate" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/sensorData/localDate" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/sensorData/weatherData" />
         <option name="modules">
           <set>
