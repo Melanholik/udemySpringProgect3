@@ -49,7 +49,7 @@ public class JavaViewForClient {
         Sensor sensor = new Sensor(sensorName);
         try {
             workWithSensorData.addSensor(sensor);
-            System.out.println("Сенсор успешно добавлен");
+            messagePrinter.addSensorSuccess();
         } catch (Exception e) {
             messagePrinter.mistakeAddSensor();
             System.out.println(e.getMessage());
@@ -79,9 +79,12 @@ public class JavaViewForClient {
     }
 
     private void watchSchedule() {
-        messagePrinter.writeNameCity();
-        String nameCity = getNextLineByScanner();
-        List<SensorData> sensorData = workWithSensorData.getSensorsDataBySensorName(nameCity);
+        messagePrinter.writeNameSensor();
+        String nameSensor = getNextLineByScanner();
+        List<SensorData> sensorData = workWithSensorData.getSensorsDataBySensorName(nameSensor);
+        if (sensorData.isEmpty()) {
+            messagePrinter.exceptionNotFoundOrNoData();
+        }
         Schedule.whiteTemCByTime(sensorData);
     }
 
@@ -167,7 +170,7 @@ public class JavaViewForClient {
             return number;
         } catch (Exception e) {
             scanner.nextLine();
-            System.out.print("Вы ввели не число! Повторите ввод:\n");
+            messagePrinter.exceptionNotNumber();
             return getIntByScanner();
         }
     }
@@ -177,7 +180,7 @@ public class JavaViewForClient {
             scanner.nextLine();
             return scanner.nextLine();
         } catch (Exception e) {
-            System.out.print("Вы что-то ввели неправильно! Повторите ввод:\n");
+            messagePrinter.exceptionBadEnter();
             scanner.nextLine();
             return getNextLineByScanner();
         }
@@ -189,8 +192,7 @@ public class JavaViewForClient {
             number = scanner.nextDouble();
             return number;
         } catch (Exception e) {
-            scanner.nextLine();
-            System.out.print("Вы ввели не число! Повторите ввод:\n");
+            messagePrinter.exceptionNotNumber();
             return getDoubleByScanner();
         }
     }
@@ -202,7 +204,7 @@ public class JavaViewForClient {
             return number;
         } catch (Exception e) {
             scanner.nextLine();
-            System.out.print("Вы ввели не true/false! Повторите ввод:\n");
+            messagePrinter.exceptionNoBoolean();
             return getBooleanByScanner();
         }
     }
@@ -210,20 +212,17 @@ public class JavaViewForClient {
     private LocalDateTime getLocalDataTimeByScanner() {
         String str;
         try {
-            scanner.nextLine();
-            str = scanner.nextLine();
+            str = getNextLineByScanner();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
             return LocalDateTime.parse(str, formatter);
         } catch (Exception e) {
-            scanner.nextLine();
-            System.out.print("Вы ввели дату не в формате dd-MM-yyyy HH:mm! Повторите ввод:\n");
+            messagePrinter.exceptionNotDate();
             return getLocalDataTimeByScanner();
         }
     }
 
     private void badChoice() {
         messagePrinter.badRange(1, 5);
-        messagePrinter.startMenu();
     }
 
     private interface Method {

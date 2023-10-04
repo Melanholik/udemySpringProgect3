@@ -49,7 +49,7 @@ public class WorkWithSensorData {
 
     }
 
-    public List<SensorData> getSensorsDataBySensorName(String name){
+    public List<SensorData> getSensorsDataBySensorName(String name) {
         String url = "http://localhost:8080/measurements/byName";
         HttpEntity<Sensor> request = new HttpEntity<>(new Sensor(name));
         String jsonSensorData = restTemplate.postForObject(url, request, String.class);

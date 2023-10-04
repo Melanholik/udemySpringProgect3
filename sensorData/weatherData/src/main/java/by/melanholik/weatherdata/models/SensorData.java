@@ -16,13 +16,6 @@ public class SensorData {
         sensor = new Sensor();
     }
 
-    public SensorData(Float value, Boolean raining, Sensor sensor, LocalDateTime dateWeather) {
-        this.value = value;
-        this.raining = raining;
-        this.sensor = sensor;
-        this.dateWeather = dateWeather;
-    }
-
     public Float getValue() {
         return value;
     }

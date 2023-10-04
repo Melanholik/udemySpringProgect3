@@ -1,12 +1,11 @@
 package by.melanholik.weatherdata;
 
-import by.melanholik.weatherdata.models.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import by.melanholik.weatherdata.models.JavaViewForClient;
 
 
 public class WeatherDataApplication {
 
-    public static void main(String[] args) throws JsonProcessingException {
+    public static void main(String[] args) {
         JavaViewForClient view = new JavaViewForClient();
         view.startWork();
     }
